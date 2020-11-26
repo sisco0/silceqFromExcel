@@ -32,7 +32,7 @@ print(db)
 URI_SILCEQ = "http://silceq.usebeq.edu.mx/sce/Entrada.php?usuacla=&usuapass="
 URI_SILCEQ2 = "http://silceq.usebeq.edu.mx/sce/MANTTO_GEN.PHP?manto=Reg_Apo_Req&usua=" + silceq_user
 chromeOptions = Options()
-chromeOptions.headless = True
+chromeOptions.headless = False
 drs = webdriver.Chrome(options=chromeOptions)
 drs.get(URI_SILCEQ)
 delay = 3  # seconds
