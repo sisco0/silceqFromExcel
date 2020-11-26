@@ -1,0 +1,5 @@
+xlrd
+pandas
+selenium
+python-dotenv
+
