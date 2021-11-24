@@ -1,6 +1,7 @@
 # Use silceq environment
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -16,7 +17,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Configuration
-db_file = "3A.xlsx"
+db_file = "silceq2A_2021_cadereyta_noviembre.xlsx"
 silceq_user = os.getenv("SILCEQ_USER")
 silceq_pass = os.getenv("SILCEQ_PASS")
 silceq_grado = os.getenv("SILCEQ_GRADO")
@@ -38,16 +39,16 @@ drs.get(URI_SILCEQ)
 delay = 3  # seconds
 myElem = WebDriverWait(drs, delay).until(
     EC.presence_of_element_located((By.ID, "usuario")))
-input_user = drs.find_element_by_name("usuario")
-input_password = drs.find_element_by_name("contrasena")
+input_user = drs.find_element(By.NAME, "usuario")
+input_password = drs.find_element(By.NAME, "contrasena")
 input_user.send_keys(silceq_user)
 input_password.send_keys(silceq_pass)
 input_user.submit()
 # Get students lists for grade and group selected
 drs.get(URI_SILCEQ2)
-drs.find_element_by_xpath("//input[@id='gra']").send_keys(silceq_grado)
-drs.find_element_by_xpath("//input[@id='gru']").send_keys(silceq_grupo)
-drs.find_element_by_xpath(
+drs.find_element(By.XPATH, "//input[@id='gra']").send_keys(silceq_grado)
+drs.find_element(By.XPATH, "//input[@id='gru']").send_keys(silceq_grupo)
+drs.find_element(By.XPATH, 
     "//div[@id='CollapsiblePanel1']/div/table[2]/tbody/tr/td/center/input[1]").click()
 
 
@@ -78,7 +79,7 @@ subjects = [
      'catx': 'AREAS                                                       ',
              'id': '105',
              'idx': 'Educación Física'}]
-bn_set = drs.find_elements_by_xpath(
+bn_set = drs.find_elements(By.XPATH, 
     "//input[@type='image' and @src='../images/nuevo24x24.png']")
 for sid in range(len(subjects)):
 
@@ -104,16 +105,17 @@ for sid in range(len(subjects)):
             "document.getElementsByName('m_destipmat')[0].removeAttribute('readonly')")
         drs.execute_script(
             "document.getElementsByName('m_desmat')[0].removeAttribute('readonly')")
-        drs.find_element_by_xpath(
+        drs.find_element(By.XPATH, 
             "//input[@name='m_tm_clave']").send_keys(s.get('cat'))
         # drs.find_element_by_xpath("//input[@name='m_destipmat']").send_keys(s.get('catx'))
-        drs.find_element_by_xpath(
+        drs.find_element(By.XPATH, 
             "//input[@name='m_ma_clave']").send_keys(s.get('id'))
         # drs.find_element_by_xpath("//input[@name='m_desmat']").send_keys(s.get('idx'))
-        drs.find_element_by_xpath(
-            "//textarea[@name='m_aa_mensaje']").send_keys(db.iloc[st, sid+1])
-        # time.sleep(400)
-        drs.find_element_by_xpath(
-            "//input[@type='image' and @src='../images/Save32x32.png']").click()
-        time.sleep(0.5)
+        if len(db.iloc[st, sid+1].strip()) > 0:
+            drs.find_element(By.XPATH, 
+                "//textarea[@name='m_aa_mensaje']").send_keys(db.iloc[st, sid+1])
+            # time.sleep(400)
+            drs.find_element(By.XPATH, 
+                "//input[@type='image' and @src='../images/Save32x32.png']").click()
+            time.sleep(0.5)
         drs.close()
